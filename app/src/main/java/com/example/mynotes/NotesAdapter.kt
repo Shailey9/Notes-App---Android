@@ -1,7 +1,6 @@
 package com.example.mynotes
 
-import android.app.Application
-import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +8,21 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotes.entities.Notes
-import com.example.mynotes.room.NotesDatabase
 
 class NotesAdapter( private var arrlist : List<Notes>, private var notesViewModel : NotesViewModel ) : RecyclerView.Adapter<NotesAdapter.MyViewHolder>() {
 
-    val arr : List<Notes> = arrlist
+    private val arr : List<Notes> = arrlist
+    private var mLinester : OnItemClickListener? = null
 
-    class MyViewHolder : RecyclerView.ViewHolder{
+    interface OnItemClickListener {
+        fun onItemClick(position : Int)
+    }
+
+    fun setOnItemClickListener(listenerr : OnItemClickListener){
+        mLinester = listenerr
+    }
+
+    inner class MyViewHolder : RecyclerView.ViewHolder{
           var txtTitle : TextView? = null
           var txtDescription : TextView? = null
           var deleteBtn : ImageButton? = null
@@ -23,6 +30,15 @@ class NotesAdapter( private var arrlist : List<Notes>, private var notesViewMode
              txtTitle = view.findViewById(R.id.title)
              txtDescription = view.findViewById(R.id.description)
              deleteBtn = view.findViewById(R.id.deleteBtn)
+
+             view.setOnClickListener(View.OnClickListener {
+                 mLinester ?.let{
+                     val position = adapterPosition
+                     if(position != RecyclerView.NO_POSITION){
+                         it.onItemClick(position)
+                     }
+                 }
+             })
          }
     }
 

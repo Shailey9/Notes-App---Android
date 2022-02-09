@@ -30,6 +30,10 @@ class NotesViewModel : AndroidViewModel {
         notesRepository!!.deleteAll()
     }
 
+    fun update(note : Notes) = CoroutineScope(Dispatchers.IO).launch {
+        notesRepository!!.update(note)
+    }
+
     fun getNotes() : LiveData<List<Notes>> = notesRepository!!.getNotes()
 
 }

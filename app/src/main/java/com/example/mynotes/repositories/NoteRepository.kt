@@ -20,4 +20,6 @@ class NoteRepository{
 
      fun getNotes() : LiveData<List<Notes>> = notesDao!!.getNotes()
 
+     fun update(note : Notes) = notesDao!!.update(note)
+
 }

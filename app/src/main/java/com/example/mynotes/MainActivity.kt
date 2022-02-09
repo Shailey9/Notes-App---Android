@@ -3,7 +3,6 @@ package com.example.mynotes
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +12,7 @@ import com.example.mynotes.room.AddNotes
 import com.example.mynotes.room.NotesDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NotesAdapter.OnItemClickListener {
 
     var noteViewModel : NotesViewModel? = null
     var recyclerView : RecyclerView? = null
@@ -45,8 +44,18 @@ class MainActivity : AppCompatActivity() {
 
     fun setAdapter(){
         val adapter = NotesAdapter(arr!!, noteViewModel!!)
+        adapter.setOnItemClickListener(this)
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = LinearLayoutManager(this)
         recyclerView!!.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun onItemClick(position: Int) {
+        Intent(this, AddNotes::class.java).also {
+            it.putExtra("NoteId", arr!!.get(position).id)
+            it.putExtra("NoteTitle", arr!!.get(position).title)
+            it.putExtra("NoteDescription", arr!!.get(position).description)
+            startActivity(it)
+        }
     }
 }

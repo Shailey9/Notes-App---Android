@@ -2,7 +2,6 @@ package com.example.mynotes.room
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,18 +16,30 @@ class AddNotes : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_notes)
 
-        saveBtn.setOnClickListener(){
-             val title = findViewById<EditText>(R.id.addTitle).text.toString()
-             val desc = findViewById<EditText>(R.id.addDescription).text.toString()
-             if(NotesViewModel(this.application).insert(Notes(title, desc)).isCompleted){
-                 Toast.makeText(this, "Note Added...", Toast.LENGTH_SHORT).show()
-                 Intent(this, MainActivity::class.java).also {
-                     startActivity(it)
-                 }
-             }else{
-                 Toast.makeText(this, "Something went wrong...", Toast.LENGTH_SHORT).show()
-             }
-        }
+        val intt = intent
+        val NoteId = intt.getIntExtra("NoteId", 0)
+        val NoteTitle = intt.getStringExtra("NoteTitle")
+        val NoteDescription = intt.getStringExtra("NoteDescription")
 
+        addTitle.setText(NoteTitle)
+        addDescription.setText(NoteDescription)
+
+        saveBtn.setOnClickListener(){
+            if(NoteId!=0) {
+                val note = Notes(addTitle.text.toString(), addDescription.text.toString())
+                note.id = NoteId
+                NotesViewModel(this.application).update(note)
+                Toast.makeText(this, "Note Added...", Toast.LENGTH_SHORT).show()
+                Intent(this, MainActivity::class.java).also {
+                    startActivity(it)
+                }
+            }else{
+                NotesViewModel(this.application).insert(Notes(addTitle.text.toString(), addDescription.text.toString()))
+                Toast.makeText(this, "Note Added...", Toast.LENGTH_SHORT).show()
+                Intent(this, MainActivity::class.java).also {
+                    startActivity(it)
+                }
+            }
+        }
     }
 }

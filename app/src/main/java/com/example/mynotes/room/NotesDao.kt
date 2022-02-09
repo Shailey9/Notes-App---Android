@@ -1,10 +1,7 @@
 package com.example.mynotes.room
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.mynotes.entities.Notes
 
 @Dao
@@ -21,5 +18,8 @@ interface NotesDao {
 
     @Query("Select * from Notes")
     fun getNotes() : LiveData<List<Notes>>
+
+    @Update
+    fun update(note : Notes)
 
 }
