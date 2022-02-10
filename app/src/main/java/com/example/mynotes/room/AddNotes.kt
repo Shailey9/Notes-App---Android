@@ -25,20 +25,24 @@ class AddNotes : AppCompatActivity() {
         addDescription.setText(NoteDescription)
 
         saveBtn.setOnClickListener(){
+            if( addTitle.text.toString().trim().length == 0 && addDescription.text.toString().trim().length == 0 ){
+                Toast.makeText(this, "Empty Note Discarded", Toast.LENGTH_SHORT).show()
+                Intent(this, MainActivity::class.java).also {
+                    startActivity(it)
+                }
+                return@setOnClickListener
+            }
             if(NoteId!=0) {
                 val note = Notes(addTitle.text.toString(), addDescription.text.toString())
                 note.id = NoteId
                 NotesViewModel(this.application).update(note)
                 Toast.makeText(this, "Note Added...", Toast.LENGTH_SHORT).show()
-                Intent(this, MainActivity::class.java).also {
-                    startActivity(it)
-                }
             }else{
                 NotesViewModel(this.application).insert(Notes(addTitle.text.toString(), addDescription.text.toString()))
                 Toast.makeText(this, "Note Added...", Toast.LENGTH_SHORT).show()
-                Intent(this, MainActivity::class.java).also {
-                    startActivity(it)
-                }
+            }
+            Intent(this, MainActivity::class.java).also {
+               startActivity(it)
             }
         }
     }
